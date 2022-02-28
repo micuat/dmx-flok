@@ -1,3 +1,36 @@
+# dmx-flok
+
+This is a clone of [dmx-web](https://github.com/node-dmx/dmx-web) edited for live-coding on [flok](https://github.com/munshkr/flok).
+
+## setup
+
+On the computer that has DMX:
+
+  git clone https://github.com/micuat/dmx-flok.git # Clone the repository
+	cd dmx-flok
+	npm install
+	node dmx-web.js -c dmx-web.json
+
+`public.js` has to be hosted online. For example, you can use https://light-academy.glitch.me/script.js
+
+open a flok session on https://flok.clic.cf/. The session must be opened on the computer that has the DMX interface plugged in.
+
+load the script
+
+  loadScript("https://light-academy.glitch.me/script.js")
+  lights(1,1,1,1)
+  light0([0,1],()=>Math.sin(time*3),1)
+
+## API
+
+`lights(r,g,b,a)` overwrites all light colors
+
+`light0(r,g,b,a)` sets light colors on the 0th light
+
+currently index is hardcoded (5 lights) and only RGB lights are supported. They have to be configured on `dmx-web.json` and `dmx-web.js` according to your setup.
+
+original document:
+
 # node-dmx
 
 Webinterface and HTTP API using [node-dmx](https://github.com/node-dmx/dmx)
