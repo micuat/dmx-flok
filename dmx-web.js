@@ -4,6 +4,7 @@ const http = require('http');
 const body = require('body-parser');
 const express = require('express');
 const socketio = require('socket.io');
+const socketioClient = require('socket.io-client');
 const program = require('commander');
 const DMX = require('dmx');
 const A = DMX.Animation;
@@ -106,7 +107,27 @@ function DMXWeb() {
     }
   });
 
+  const socket = socketioClient("https://light.glitches.me");
+  socket.on("register", () => {
+    socket.emit('init', {'devices': dmx.devices, 'setup': config});
+  })
+
+  socket.on('request_refresh', () => {
+    for (const universe in config.universes) {
+      socket.emit('update', universe, dmx.universeToObject(universe));
+    }
+  });
+
+  socket.on('update', (universe, update) => {
+    dmx.update(universe, update);
+  });
+
+  dmx.on('update', (universe, update) => {
+    socket.emit('update', universe, update);
+  });
+
   io.sockets.on('connection', socket => {
+    console.log("new client")
     socket.emit('init', {'devices': dmx.devices, 'setup': config});
 
     socket.on('request_refresh', () => {
